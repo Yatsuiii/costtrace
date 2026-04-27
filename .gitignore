@@ -1,0 +1,31 @@
+# Local-only files
+CLAUDE.md
+
+# Build artifacts
+/costtrace
+/dist/
+*.exe
+
+# Go
+*.test
+*.out
+go.work
+go.work.sum
+
+# Local data
+*.db
+*.db-journal
+*.sqlite
+*.sqlite-journal
+config.toml
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
