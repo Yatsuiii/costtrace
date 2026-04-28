@@ -1,0 +1,18 @@
+[aws]
+profile = "default"
+region = "us-east-1"
+account_id = "123456789012"
+
+[github]
+repo = "org/name"
+token_env = "GITHUB_TOKEN"
+deploy_workflow_pattern = "deploy.*"
+
+[detection]
+threshold_sigma = 2.0
+baseline_days = 7
+correlation_window_hours = 4
+min_delta_usd = 50
+
+[output]
+format = "text"
