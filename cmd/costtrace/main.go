@@ -210,30 +210,10 @@ func cmdReport() *cobra.Command {
 			if err != nil {
 				return err
 			}
-
-			deploys, err := db.DeploysBetween(since.AddDate(0, 0, -1), time.Now().UTC())
+			results, err := buildResults(db, cfg, since, anomalyRows)
 			if err != nil {
 				return err
 			}
-			var deployIDs []string
-			for _, d := range deploys {
-				deployIDs = append(deployIDs, d.ID)
-			}
-			ctRows, err := db.CloudTrailForDeployList(deployIDs)
-			if err != nil {
-				return err
-			}
-			ctByDeploy := map[string][]storage.CloudTrailRow{}
-			for _, r := range ctRows {
-				ctByDeploy[r.DeployID] = append(ctByDeploy[r.DeployID], r)
-			}
-
-			windowHours := cfg.Detection.CorrelationWindowHours
-			if windowHours == 0 {
-				windowHours = 4
-			}
-			results := correlate.Match(anomalyRows, deploys, windowHours, ctByDeploy)
-
 			if format == "markdown" {
 				report.AnalyzeMarkdown(os.Stdout, results, time.Now().UTC())
 			} else {
@@ -280,30 +260,10 @@ func cmdAnalyze() *cobra.Command {
 				return err
 			}
 
-			deploys, err := db.DeploysBetween(since.AddDate(0, 0, -1), time.Now().UTC())
+			results, err := buildResults(db, cfg, since, anomalyRows)
 			if err != nil {
 				return err
 			}
-
-			// load CloudTrail keyed by deploy ID
-			var deployIDs []string
-			for _, d := range deploys {
-				deployIDs = append(deployIDs, d.ID)
-			}
-			ctRows, err := db.CloudTrailForDeployList(deployIDs)
-			if err != nil {
-				return err
-			}
-			ctByDeploy := map[string][]storage.CloudTrailRow{}
-			for _, r := range ctRows {
-				ctByDeploy[r.DeployID] = append(ctByDeploy[r.DeployID], r)
-			}
-
-			windowHours := cfg.Detection.CorrelationWindowHours
-			if windowHours == 0 {
-				windowHours = 4
-			}
-			results := correlate.Match(anomalyRows, deploys, windowHours, ctByDeploy)
 
 			var corrRows []storage.CorrelationRow
 			for _, res := range results {
@@ -327,6 +287,35 @@ func cmdAnalyze() *cobra.Command {
 	}
 	cmd.Flags().IntVar(&days, "days", 30, "window to analyze")
 	return cmd
+}
+
+func buildResults(
+	db *storage.DB,
+	cfg *config.Config,
+	since time.Time,
+	anomalyRows []storage.AnomalyRow,
+) ([]correlate.Result, error) {
+	deploys, err := db.DeploysBetween(since.AddDate(0, 0, -1), time.Now().UTC())
+	if err != nil {
+		return nil, err
+	}
+	var deployIDs []string
+	for _, d := range deploys {
+		deployIDs = append(deployIDs, d.ID)
+	}
+	ctRows, err := db.CloudTrailForDeployList(deployIDs)
+	if err != nil {
+		return nil, err
+	}
+	ctByDeploy := map[string][]storage.CloudTrailRow{}
+	for _, r := range ctRows {
+		ctByDeploy[r.DeployID] = append(ctByDeploy[r.DeployID], r)
+	}
+	windowHours := cfg.Detection.CorrelationWindowHours
+	if windowHours == 0 {
+		windowHours = 4
+	}
+	return correlate.Match(anomalyRows, deploys, windowHours, ctByDeploy), nil
 }
 
 func cmdExplain() *cobra.Command {

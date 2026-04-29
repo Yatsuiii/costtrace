@@ -96,15 +96,29 @@ func serviceToResourceHints(service string) []string {
 	case strings.Contains(s, "s3"):
 		return []string{"bucket", "aws::s3"}
 	case strings.Contains(s, "rds"):
-		return []string{"dbinstance", "aws::rds"}
+		return []string{"dbinstance", "dbcluster", "aws::rds"}
 	case strings.Contains(s, "lambda"):
 		return []string{"function", "aws::lambda"}
-	case strings.Contains(s, "elb") || strings.Contains(s, "load"):
+	case strings.Contains(s, "elb") || strings.Contains(s, "elasticloadbalancing"):
 		return []string{"loadbalancer", "aws::elasticloadbalancing"}
 	case strings.Contains(s, "elasticache"):
-		return []string{"cachecluster", "aws::elasticache"}
+		return []string{"cachecluster", "replicationgroup", "aws::elasticache"}
 	case strings.Contains(s, "dynamodb"):
 		return []string{"table", "aws::dynamodb"}
+	case strings.Contains(s, "eks") || strings.Contains(s, "kubernetes"):
+		return []string{"cluster", "nodegroup", "aws::eks"}
+	case strings.Contains(s, "ecs") || strings.Contains(s, "fargate"):
+		return []string{"cluster", "service", "task", "aws::ecs"}
+	case strings.Contains(s, "cloudfront"):
+		return []string{"distribution", "aws::cloudfront"}
+	case strings.Contains(s, "sqs"):
+		return []string{"queue", "aws::sqs"}
+	case strings.Contains(s, "sns"):
+		return []string{"topic", "aws::sns"}
+	case strings.Contains(s, "opensearch") || strings.Contains(s, "elasticsearch"):
+		return []string{"domain", "aws::opensearchservice", "aws::elasticsearch"}
+	case strings.Contains(s, "kinesis"):
+		return []string{"stream", "deliverystream", "aws::kinesis"}
 	default:
 		return []string{}
 	}
