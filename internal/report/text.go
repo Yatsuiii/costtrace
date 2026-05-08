@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/charmbracelet/lipgloss"
 	"github.com/Yatsuiii/costtrace/internal/correlate"
 	"github.com/Yatsuiii/costtrace/internal/storage"
+	"github.com/charmbracelet/lipgloss"
 )
 
 var (

@@ -88,18 +88,23 @@ func scoreWithLineage(
 	return scored
 }
 
+// serviceToResourceHints maps a Cost Explorer service name to lowercase
+// substrings that should appear in CloudTrail resource types created by that
+// service. Cost Explorer reports services in their canonical long form (e.g.
+// "Amazon Elastic Compute Cloud - Compute"), so each case has to match both
+// the short tag (ec2) and the long form (elastic compute).
 func serviceToResourceHints(service string) []string {
 	s := strings.ToLower(service)
 	switch {
-	case strings.Contains(s, "ec2"):
+	case strings.Contains(s, "ec2") || strings.Contains(s, "elastic compute"):
 		return []string{"instance", "volume", "aws::ec2"}
-	case strings.Contains(s, "s3"):
+	case strings.Contains(s, "s3") || strings.Contains(s, "simple storage"):
 		return []string{"bucket", "aws::s3"}
-	case strings.Contains(s, "rds"):
+	case strings.Contains(s, "rds") || strings.Contains(s, "relational database"):
 		return []string{"dbinstance", "dbcluster", "aws::rds"}
 	case strings.Contains(s, "lambda"):
 		return []string{"function", "aws::lambda"}
-	case strings.Contains(s, "elb") || strings.Contains(s, "elasticloadbalancing"):
+	case strings.Contains(s, "elb") || strings.Contains(s, "elastic load"):
 		return []string{"loadbalancer", "aws::elasticloadbalancing"}
 	case strings.Contains(s, "elasticache"):
 		return []string{"cachecluster", "replicationgroup", "aws::elasticache"}
@@ -107,13 +112,13 @@ func serviceToResourceHints(service string) []string {
 		return []string{"table", "aws::dynamodb"}
 	case strings.Contains(s, "eks") || strings.Contains(s, "kubernetes"):
 		return []string{"cluster", "nodegroup", "aws::eks"}
-	case strings.Contains(s, "ecs") || strings.Contains(s, "fargate"):
+	case strings.Contains(s, "ecs") || strings.Contains(s, "elastic container") || strings.Contains(s, "fargate"):
 		return []string{"cluster", "service", "task", "aws::ecs"}
 	case strings.Contains(s, "cloudfront"):
 		return []string{"distribution", "aws::cloudfront"}
-	case strings.Contains(s, "sqs"):
+	case strings.Contains(s, "sqs") || strings.Contains(s, "simple queue"):
 		return []string{"queue", "aws::sqs"}
-	case strings.Contains(s, "sns"):
+	case strings.Contains(s, "sns") || strings.Contains(s, "simple notification"):
 		return []string{"topic", "aws::sns"}
 	case strings.Contains(s, "opensearch") || strings.Contains(s, "elasticsearch"):
 		return []string{"domain", "aws::opensearchservice", "aws::elasticsearch"}

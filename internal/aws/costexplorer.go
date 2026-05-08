@@ -6,10 +6,10 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/Yatsuiii/costtrace/internal/storage"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/costexplorer"
 	cetypes "github.com/aws/aws-sdk-go-v2/service/costexplorer/types"
-	"github.com/Yatsuiii/costtrace/internal/storage"
 )
 
 type CEClient struct {

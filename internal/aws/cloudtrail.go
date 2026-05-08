@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/Yatsuiii/costtrace/internal/storage"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail"
 	cttypes "github.com/aws/aws-sdk-go-v2/service/cloudtrail/types"
-	"github.com/Yatsuiii/costtrace/internal/storage"
 )
 
 // write events that create/modify resources — these are the ones that change cost

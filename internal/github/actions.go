@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	gh "github.com/google/go-github/v72/github"
 	"github.com/Yatsuiii/costtrace/internal/storage"
+	gh "github.com/google/go-github/v72/github"
 )
 
 type Client struct {
@@ -38,8 +38,8 @@ func NewClient(token, repoSlug, workflowPattern string) (*Client, error) {
 
 func (c *Client) FetchRuns(ctx context.Context, since time.Time) ([]storage.DeployRow, error) {
 	opts := &gh.ListWorkflowRunsOptions{
-		Status:  "completed",
-		Created: ">=" + since.Format("2006-01-02"),
+		Status:      "completed",
+		Created:     ">=" + since.Format("2006-01-02"),
 		ListOptions: gh.ListOptions{PerPage: 100},
 	}
 

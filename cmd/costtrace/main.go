@@ -10,7 +10,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/spf13/cobra"
 	awsint "github.com/Yatsuiii/costtrace/internal/aws"
 	"github.com/Yatsuiii/costtrace/internal/config"
 	"github.com/Yatsuiii/costtrace/internal/correlate"
@@ -18,6 +17,7 @@ import (
 	ghint "github.com/Yatsuiii/costtrace/internal/github"
 	"github.com/Yatsuiii/costtrace/internal/report"
 	"github.com/Yatsuiii/costtrace/internal/storage"
+	"github.com/spf13/cobra"
 )
 
 const configPath = "config.toml"

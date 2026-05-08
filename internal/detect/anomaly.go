@@ -45,7 +45,10 @@ func Detect(rows []storage.CostRow, cfg Config) []Anomaly {
 
 	var anomalies []Anomaly
 	for service, dates := range dailyTotals {
-		type dp struct{ date string; amt float64 }
+		type dp struct {
+			date string
+			amt  float64
+		}
 		var series []dp
 		for d, a := range dates {
 			series = append(series, dp{d, a})

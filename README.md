@@ -1,5 +1,7 @@
 # costtrace
 
+[![ci](https://github.com/Yatsuiii/costtrace/actions/workflows/ci.yml/badge.svg)](https://github.com/Yatsuiii/costtrace/actions/workflows/ci.yml)
+
 Deploy-to-cost causal attribution for AWS.
 
 > Which PR caused this $4k/day spike?
